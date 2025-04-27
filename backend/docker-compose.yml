@@ -1,0 +1,16 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: msit_mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: IngegneriaAI3338090217  
+      MYSQL_DATABASE: msitdb      
+    ports:
+      - "3306:3306"
+    volumes:
+    - project_mysql_msit:/var/lib/mysql
+
+volumes:
+  project_mysql_msit:
