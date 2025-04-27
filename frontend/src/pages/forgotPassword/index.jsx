@@ -8,6 +8,11 @@ function ForgotPassword() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const handleLoginClick = (event) => {
+    event.preventDefault(); 
+    navigate('/login');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
   
@@ -49,8 +54,9 @@ function ForgotPassword() {
           <label className='text-base font-thin text-gray-950 mt-5'>
             Remember your password?{' '}
             <a
-              href='/login'
+              href='#'
               className='text-blue-700 hover:text-blue-500'
+              onClick={handleLoginClick}
             >
               Login
             </a>

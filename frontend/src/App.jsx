@@ -5,7 +5,7 @@ import SignUp from './pages/signUp';
 import Login from './pages/logIn';
 import Loggedin from './pages/logIn/loggedIn';
 import ForgotPassword from "./pages/forgotPassword";
-import ResetPassword from './pages/ResetPassword'; 
+import ResetPassword from './pages/resetPassword'; 
 
 function App() {
   const router = createBrowserRouter([
