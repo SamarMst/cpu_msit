@@ -7,8 +7,6 @@ require('dotenv').config();
 
 const { ACCESS_TOKEN_SECRET, EMAIL_USER, EMAIL_PASS } = process.env;
 
-// --------------------- GET USER INFORMATION ---------------------
-
 const getUserInformation = async (req, res) => {
   try {
     const userEmail = req.user.email;
@@ -44,8 +42,6 @@ const getUserInformation = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal server error", error: error.message });
   }
 };
-
-// --------------------- FORGOT PASSWORD ---------------------
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -90,7 +86,6 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// --------------------- RESET PASSWORD ---------------------
 
 const resetPassword = async (req, res) => {
   const { token, password } = req.body;
