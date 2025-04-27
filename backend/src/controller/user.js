@@ -75,7 +75,7 @@ const forgotPassword = async (req, res) => {
       subject: 'Password Reset Link',
       html: `
         <p>You requested to reset your password.</p>
-        <p>Click <a href="http://yourfrontenddomain.com/reset-password/${token}">here</a> to reset it.</p>
+         <p>Click <a href="https://cpu-msit-samar-mestiris-projects.vercel.app/reset-password/${token}">here</a> to reset it.</p>
         <p>If you did not request this, you can safely ignore this email.</p>
       `,
     };
