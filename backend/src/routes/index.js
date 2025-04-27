@@ -6,6 +6,7 @@ const userInfoRouter = require("./user");
 
 
 router.use("/auth", authRouter);
-router.use("/user", authenticateToken, userInfoRouter);
+router.use("/user", userInfoRouter);
 
 module.exports = router;
+ 

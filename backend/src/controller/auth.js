@@ -3,9 +3,8 @@ const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-
-const signup = async (req , res ) => {
-  const { email, password} = req.body;
+const signup = async (req, res) => {
+  const { email, password, firstName, lastName, countryCode, phoneNumber } = req.body;
   try {
     if (!email || !password) {
       return res.status(400).json({
@@ -21,14 +20,37 @@ const signup = async (req , res ) => {
       });
     }
 
+    if ((phoneNumber && !countryCode) || (!phoneNumber && countryCode)) {
+      return res.status(400).json({
+        success: false,
+        message: "Both country code and phone number must be provided together",
+      });
+    }
+
     const accountExist = await prisma.users.findFirst({
       where: { email },
     });
     if (accountExist) {
       return res.status(409).json({
         success: false,
-        message: "Account already exists.",
+        message: "Account with this email already exists.",
       });
+    }
+
+    if (phoneNumber && countryCode) {
+      const phoneExists = await prisma.users.findFirst({
+        where: {
+          countryCode,
+          phoneNumber,
+        },
+      });
+      
+      if (phoneExists) {
+        return res.status(409).json({
+          success: false,
+          message: "Account with this phone number already exists.",
+        });
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,9 +59,12 @@ const signup = async (req , res ) => {
       data: {
         email,
         password: hashedPassword,
+        firstName,
+        lastName,
+        countryCode,
+        phoneNumber,
       },
     });
-
 
     res.status(201).json({
       success: true,
@@ -47,19 +72,38 @@ const signup = async (req , res ) => {
       data: {
         usersId: accountCreated.id,
         email: accountCreated.email,
+        firstName: accountCreated.firstName,
+        lastName: accountCreated.lastName,
+        phoneNumber: accountCreated.phoneNumber ? 
+          `${accountCreated.countryCode} ${accountCreated.phoneNumber}` : null,
       },
     });
   } catch (error) {
     console.error("Error creating account:", error);
+    
+    if (error.code === 'P2002') {
+      if (error.meta?.target?.includes('unique_phone')) {
+        return res.status(409).json({
+          success: false,
+          message: "Account with this phone number already exists.",
+        });
+      } else if (error.meta?.target?.includes('email')) {
+        return res.status(409).json({
+          success: false,
+          message: "Account with this email already exists.",
+        });
+      }
+    }
+    
     res.status(500).json({
       success: false,
-      message: "Internal server error", 
+      message: "Internal server error",
       error: error.message,
     });
   }
 };
 
-const login = async (req = request, res = response) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
@@ -98,19 +142,25 @@ const login = async (req = request, res = response) => {
         expiresIn: "1d",
       }
     );
+    
     res.status(200).json({
       success: true,
       message: "Login successful",
       data: {
         token: accessToken,
+        userId: accountExist.id,
         email: accountExist.email,
+        firstName: accountExist.firstName,
+        lastName: accountExist.lastName,
+        phoneNumber: accountExist.phoneNumber ? 
+          `${accountExist.countryCode} ${accountExist.phoneNumber}` : null,
       },
     });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({
       success: false,
-      message: "Internal server error", 
+      message: "Internal server error",
       error: error.message,
     });
   }

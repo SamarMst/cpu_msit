@@ -121,6 +121,10 @@ exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   email: 'email',
   password: 'password',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  countryCode: 'countryCode',
+  phoneNumber: 'phoneNumber',
   createdAt: 'createdAt'
 };
 
@@ -136,7 +140,11 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.UsersOrderByRelevanceFieldEnum = {
   email: 'email',
-  password: 'password'
+  password: 'password',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  countryCode: 'countryCode',
+  phoneNumber: 'phoneNumber'
 };
 
 

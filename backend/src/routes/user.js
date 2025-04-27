@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const getUserInformation = require("../controller/user"); // Import directly
+const { getUserInformation, forgotPassword, resetPassword } = require("../controller/user"); 
+const authenticateToken = require("../middleware/authenticate");
+router.get("/userInfo", authenticateToken, getUserInformation);
 
-
-
-router.get("/userInfo", getUserInformation);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 module.exports = router;
